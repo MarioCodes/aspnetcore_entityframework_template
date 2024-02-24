@@ -1,0 +1,1 @@
+# aspnetcore_entityframework_template
