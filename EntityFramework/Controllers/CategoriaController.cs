@@ -4,8 +4,7 @@ using EntityFramework.Models;
 
 namespace EntityFramework.Controllers
 {
-    [ApiVersion("1.0")]
-    [Route("[controller]")]
+    [Route("[controller]/")]
     [ApiController]
     public class CategoriaController : Controller
     {
@@ -24,7 +23,6 @@ namespace EntityFramework.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Crear(Categoria categoria)
         {
             if(ModelState.IsValid)

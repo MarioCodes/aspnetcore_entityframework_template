@@ -4,7 +4,6 @@ using EntityFramework.Models;
 
 namespace EntityFramework.Controllers
 {
-    [ApiVersion("1.0")]
     [Route("[controller]")]
     [ApiController]
     public class TipoAplicacionController : Controller
