@@ -16,16 +16,33 @@ namespace EntityFramework.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult GetAll()
         {
             IEnumerable<Categoria> lista = _context.Categoria;
             return Ok(lista);
         }
 
-        [HttpPost]
-        public IActionResult Crear(Categoria categoria)
+        [HttpGet("{id}")]
+        public IActionResult GetOne(int id)
         {
-            if(ModelState.IsValid)
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            Categoria? obj = _context.Categoria.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(obj);
+        }
+
+        [HttpPost("create")]
+        public IActionResult Create(Categoria categoria)
+        {
+            if (ModelState.IsValid)
             {
                 _context.Categoria.Add(categoria);
                 _context.SaveChanges();
@@ -34,5 +51,38 @@ namespace EntityFramework.Controllers
 
             return StatusCode(500, "cannot create category");
         }
+
+        [HttpPost("update")]
+        public IActionResult Update(Categoria categoria)
+        {
+            if(ModelState.IsValid)
+            {
+                _context.Categoria.Update(categoria);
+                _context.SaveChanges();
+                return Ok("updated category");
+            }
+
+            return StatusCode(500, "cannot update category");
+        }
+
+        [HttpGet("delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            Categoria? obj = _context.Categoria.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            _context.Categoria.Remove(obj);
+            _context.SaveChanges();
+            return Ok("category deleted");
+        }
+
     }
 }
