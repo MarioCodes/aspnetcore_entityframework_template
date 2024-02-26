@@ -4,6 +4,9 @@ using EntityFramework.Models;
 
 namespace EntityFramework.Controllers
 {
+    [ApiVersion("1.0")]
+    [Route("[controller]")]
+    [ApiController]
     public class CategoriaController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -13,16 +16,11 @@ namespace EntityFramework.Controllers
             _context = context;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             IEnumerable<Categoria> lista = _context.Categoria;
-            return View(lista);
-        }
-
-        [HttpGet]
-        public IActionResult Crear()
-        {
-            return View();
+            return Ok(lista);
         }
 
         [HttpPost]
@@ -33,10 +31,10 @@ namespace EntityFramework.Controllers
             {
                 _context.Categoria.Add(categoria);
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return Ok("created category");
             }
 
-            return View(categoria);
+            return StatusCode(500, "cannot create category");
         }
     }
 }

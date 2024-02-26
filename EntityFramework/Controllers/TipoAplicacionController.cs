@@ -4,6 +4,9 @@ using EntityFramework.Models;
 
 namespace EntityFramework.Controllers
 {
+    [ApiVersion("1.0")]
+    [Route("[controller]")]
+    [ApiController]
     public class TipoAplicacionController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -13,26 +16,19 @@ namespace EntityFramework.Controllers
                 _context = context;
         }
 
-        public IActionResult Index()
-        {
-            IEnumerable<TipoAplicacion> tipoAplicaciones = _context.TipoAplicacion;
-            return View(tipoAplicaciones);
-        }
-
-        [HttpGet]
-        public IActionResult Crear()
-        {
-            return View();
-        }
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Crear(TipoAplicacion tipoAplicacion)
         {
             _context.TipoAplicacion.Add(tipoAplicacion);
             _context.SaveChanges();
+            return Ok("created category");
+        }
 
-            return RedirectToAction(nameof(Index));
+        [HttpGet]
+        public IActionResult Index()
+        {
+            IEnumerable<TipoAplicacion> tipos = _context.TipoAplicacion;
+            return Ok(tipos);
         }
     }
 }
