@@ -48,5 +48,21 @@ namespace EntityFramework.Controllers
                 return Ok("producto updated");
             }
         }
+
+        [HttpGet("/delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            var productoExistente = _context.Producto
+                .FirstOrDefault(p => p.Id == id);
+
+            if( productoExistente != null)
+            {
+                _context.Producto.Remove(productoExistente);
+                _context.SaveChanges();
+                return Ok("producto removed");
+            }
+
+            return NotFound();
+        }
     }
 }
