@@ -1,4 +1,5 @@
 using EntityFramework.Data;
+using EntityFramework.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,9 @@ builder.Services.AddApiVersioning(options =>
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
 });
+
+// custom services
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // add swagger w. options
 builder.Services.AddControllers();

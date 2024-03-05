@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using EntityFramework.Data;
 using EntityFramework.Models;
+using EntityFramework.Data.Repository;
 
 namespace EntityFramework.Controllers
 {
@@ -8,18 +9,17 @@ namespace EntityFramework.Controllers
     [ApiController]
     public class CategoriaController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Categoria> _categoriaRepository;
 
-        public CategoriaController(ApplicationDbContext context)
+        public CategoriaController(IRepository<Categoria> categoriaRepository)
         {
-            _context = context;
+            _categoriaRepository = categoriaRepository;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            IEnumerable<Categoria> lista = _context.Categoria;
-            return Ok(lista);
+            return Ok(_categoriaRepository.GetAll());
         }
 
         [HttpGet("{id}")]
@@ -30,7 +30,7 @@ namespace EntityFramework.Controllers
                 return NotFound();
             }
 
-            Categoria? obj = _context.Categoria.Find(id);
+            Categoria? obj = _categoriaRepository.GetById(id);
             if (obj == null)
             {
                 return NotFound();
@@ -44,8 +44,7 @@ namespace EntityFramework.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Categoria.Add(categoria);
-                _context.SaveChanges();
+                _categoriaRepository.Add(categoria);
                 return Ok("created category");
             }
 
@@ -57,8 +56,7 @@ namespace EntityFramework.Controllers
         {
             if(ModelState.IsValid)
             {
-                _context.Categoria.Update(categoria);
-                _context.SaveChanges();
+                _categoriaRepository.Update(categoria);
                 return Ok("updated category");
             }
 
@@ -73,14 +71,13 @@ namespace EntityFramework.Controllers
                 return NotFound();
             }
 
-            Categoria? obj = _context.Categoria.Find(id);
+            Categoria? obj = _categoriaRepository.GetById(id);
             if (obj == null)
             {
                 return NotFound();
             }
 
-            _context.Categoria.Remove(obj);
-            _context.SaveChanges();
+            _categoriaRepository.Delete(obj);
             return Ok("category deleted");
         }
 

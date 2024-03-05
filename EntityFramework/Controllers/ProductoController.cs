@@ -1,8 +1,6 @@
-﻿using EntityFramework.Data;
+﻿using EntityFramework.Data.Repository;
 using EntityFramework.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace EntityFramework.Controllers
 {
@@ -10,41 +8,33 @@ namespace EntityFramework.Controllers
     [ApiController]
     public class ProductoController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Producto> _repository;
 
-        public ProductoController(ApplicationDbContext context)
+        public ProductoController(IRepository<Producto> repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            IEnumerable<Producto> lista = _context.Producto
-                                            .Include(categoria => categoria.categoria)
-                                            .Include(tipo => tipo.tipoAplicacion);
-            return Ok(lista);
+            return Ok(_repository.GetAll());
         }
 
         [HttpPost("/upsert")]
         public IActionResult Upsert(Producto producto)
         {
-            var productoExistente = _context.Producto
-                .Include(categoria => categoria.categoria)
-                .Include(tipo => tipo.tipoAplicacion)
-                .FirstOrDefault(p => p.Id == producto.Id);
+            var productoExistente = _repository.GetById(producto.Id);
 
             if(productoExistente == null)
             {
                 // Create
-                _context.Producto.Add(producto);
-                _context.SaveChanges();
+                _repository.Add(producto);
                 return Ok("producto created");
             } else
             {
                 // Update
-                _context.Producto.Update(producto);
-                _context.SaveChanges();
+                _repository.Update(producto);
                 return Ok("producto updated");
             }
         }
@@ -52,13 +42,11 @@ namespace EntityFramework.Controllers
         [HttpGet("/delete/{id}")]
         public IActionResult Delete(int id)
         {
-            var productoExistente = _context.Producto
-                .FirstOrDefault(p => p.Id == id);
+            var productoExistente = _repository.GetById(id);
 
             if( productoExistente != null)
             {
-                _context.Producto.Remove(productoExistente);
-                _context.SaveChanges();
+                _repository.Delete(productoExistente);
                 return Ok("producto removed");
             }
 
