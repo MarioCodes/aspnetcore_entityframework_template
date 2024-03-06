@@ -8,9 +8,9 @@ namespace EntityFramework.Controllers
     [ApiController]
     public class ProductoController : ControllerBase
     {
-        private readonly IRepository<Producto> _repository;
+        private readonly IProductoRepository _repository;
 
-        public ProductoController(IRepository<Producto> repository)
+        public ProductoController(IProductoRepository repository)
         {
             _repository = repository;
         }

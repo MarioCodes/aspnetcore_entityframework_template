@@ -14,29 +14,29 @@ namespace EntityFramework.Data.Repository
             _dbSet = _context.Set<T>();
         }
 
-        public void Add(T entity)
+        public virtual void Add(T entity)
         {
             _dbSet.Add(entity);
             _context.SaveChanges();
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             _dbSet.Remove(entity);
             _context.SaveChanges();
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual IEnumerable<T> GetAll()
         {
             return _dbSet.ToList();
         }
 
-        public T GetById(int id)
+        public virtual T GetById(int id)
         {
             return _dbSet.Find(id);
         }
 
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
             _context.SaveChanges();

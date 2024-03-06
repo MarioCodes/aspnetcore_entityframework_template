@@ -17,6 +17,7 @@ builder.Services.AddApiVersioning(options =>
 
 // custom services
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 
 // add swagger w. options
 builder.Services.AddControllers();
